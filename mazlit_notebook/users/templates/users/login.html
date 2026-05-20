@@ -1,0 +1,46 @@
+{% extends "users/layout.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block navtitle %}Login{% endblock %}
+
+{% block content %}
+<div class="grow flex items-center justify-center bg-neutral-200 px-4 py-8">
+
+    <div class="card card-border bg-base-100 w-96">
+        <div class="card-body">
+            <h2 class="card-title">Sign In</h2>
+            <form action="" method="post" class="space-y-4">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="error-box text-red-600">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                {% for field in form %}
+                <div class="form-control w-full">
+                <div class="form-group flex flex-col">
+                    <label for="{{ field.id_for_label }}" class="font-medium text-sm">{{ field.label }}</label>
+                </div>
+
+                <div class="relative mt-1">
+                    {{ field }}
+                </div>
+
+                {% if field.errors %}
+                <span class="text-xs text-red-500 mt-1">
+                    {{ field.errors|striptags }}
+                </span>
+                {% endif %}
+                </div>
+                {% endfor %}
+                <div class="card-actions justify-end">
+                    <button type="submit" class="btn">Sign In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
