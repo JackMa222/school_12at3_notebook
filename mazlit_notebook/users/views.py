@@ -37,14 +37,17 @@ def register_view(request):
         return redirect('index')
     
     if request.method == 'POST':
-        form = RegisterForm(request, data=request.POST)
-        if form.is_valid:
+        form = RegisterForm(data=request.POST)
+        if form.is_valid():
             user = form.save()
             login(request, user)
             
             messages.success(request, f"Account created successfully.")
-    
-    form = RegisterForm()
+            return redirect('index')
+        else:
+            messages.error(request, "Please correct the following errors.")
+    else:
+        form = RegisterForm()
     
     return render(request, 'users/register.html', {'form': form})
 
