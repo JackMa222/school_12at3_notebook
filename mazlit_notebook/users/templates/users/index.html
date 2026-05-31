@@ -1,0 +1,26 @@
+{% extends "users/layout.html" %}
+{% load tz %}
+{% block title %}Login{% endblock %}
+
+{% block navtitle %}Login{% endblock %}
+
+{% block content %}
+<div class="grow flex flex-col px-4 py-8">
+
+    <div class="card card-border bg-base-200 w-96 mx-auto shadow-md">
+        <div class="card-body">
+            <h1 class="card-title">User Information</h1>
+            <h2 class="font-semibold">Username</h2>
+            <p>{{ user.username }}</p>
+            <h2 class="font-semibold">Email</h2>
+            <p>{{ user.email }}</p>
+            <h2 class="font-semibold">First Name</h2>
+            <p>{{ user.first_name }}</p>
+            <h2 class="font-semibold">Last Name</h2>
+            <p>{{ user.last_name }}</p>
+            <h2 class="font-semibold">Date Joined</h2>
+            <p>{{ user.date_joined|localtime|date:"F d, Y g:i A" }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

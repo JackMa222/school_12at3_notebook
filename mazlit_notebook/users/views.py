@@ -11,7 +11,7 @@ def index(request):
 
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('index')
+        return redirect('users:index')
     
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
@@ -24,7 +24,7 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, f"Welcome back, {username}")
-                return redirect("index")
+                return redirect("users:index")
             else:
                 messages.error(request, "Invalid username or password.")
     else:
@@ -34,7 +34,7 @@ def login_view(request):
 
 def register_view(request):
     if request.user.is_authenticated:
-        return redirect('index')
+        return redirect('users:index')
     
     if request.method == 'POST':
         form = RegisterForm(data=request.POST)
@@ -43,7 +43,7 @@ def register_view(request):
             login(request, user)
             
             messages.success(request, f"Account created successfully.")
-            return redirect('index')
+            return redirect('users:index')
         else:
             messages.error(request, "Please correct the following errors.")
     else:
@@ -54,4 +54,4 @@ def register_view(request):
 def logout_view(request):
     logout(request)
     
-    return redirect('login')
+    return redirect('users:login')
