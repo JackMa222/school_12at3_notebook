@@ -32,8 +32,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'users',
+    'notebook',
     'tailwind',
     'theme',
+    'django_cotton',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,7 +62,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,9 +70,16 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'loaders': [
+                "django_cotton.apps.CottonLoader",
+                "django.template.loaders.filesystem.Loader",
+                "django.template.loaders.app_directories.Loader"
+            ]
         },
     },
 ]
+
+APP_DIRS = False
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
