@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
+
 
 # Create your models here.
 class PaymentBody(models.Model):
@@ -96,7 +98,7 @@ class MatchOfficial(models.Model):
     roles = models.CharField(max_length=255, verbose_name="Role(s)", null=True, blank=True)
     
     def __str__(self):
-        return f"{self.name} ({self.role})"
+        return f"{self.name} ({self.roles})"
     
 class Payment(models.Model):
     STATUS_CHOICES = [
@@ -123,8 +125,11 @@ class Payment(models.Model):
     )
     
     event = models.ForeignKey(
-        'Event',
-        ## TODO FIX match / event pymt issue
+        Event,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='payments'
     )
     
     payment_body = models.ForeignKey(
@@ -142,6 +147,26 @@ class Payment(models.Model):
         verbose_name='Payment Status'
     )
     
+    @property
+    def linked_item(self):
+        if self.match and self.event:
+            return f"{self.match.title} / {self.event.name}"
+        if self.match:
+            return self.match
+        if self.event:
+            return self.event
+        return None
+    
     def __str__(self):
-        return f"${self.amount} ({self.payment_status} - for: {self.match.title})"
+        parts = []
+        
+        if self.match:
+            parts.append(f"Match: {self.match.title}")
+            
+        if self.event:
+            parts.append(f"Event: {self.event.name}")
+            
+        linked_to = " | ".join(parts) if parts else "Unlinked payment"
+        
+        return f"${self.amount} ({self.payment_status}) - {linked_to}"
     
