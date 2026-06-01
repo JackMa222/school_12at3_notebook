@@ -1,0 +1,23 @@
+{% if messages %}
+<div class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full animate-in slide-in-from-top-4 duration-300">
+    {% for message in messages %}
+    <div class="alert shadow-lg flex justify-between items-center
+        {% if message.tags == 'success' %}alert-success
+        {% elif message.tags == 'error' or message.tags == 'danger' %}alert-error
+        {% elif message.tags == 'warning' %}alert-warning
+        {% else %}alert-info{% endif %}">
+
+        <div class="flex items-center gap-2 text-sm font-medium">
+            {% if message.tags == 'success' %}
+                success
+            {% elif message.tags == 'error' or message.tags == 'danger' %}
+                danger/error svg
+            {% else %}
+                else svg
+            {% endif %}
+            <span>{{ message }}</span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
