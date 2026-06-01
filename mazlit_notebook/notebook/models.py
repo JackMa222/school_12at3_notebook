@@ -55,7 +55,7 @@ class Event(models.Model):
     roles = models.ManyToManyField(
         Role,
         blank=True,
-        relate_name='events',
+        related_name='events',
         verbose_name="Role(s)"
     )
     
@@ -83,12 +83,12 @@ class Match(models.Model):
     roles = models.ManyToManyField(
         Role,
         blank=True,
-        relate_name='matches',
+        related_name='matches',
         verbose_name="Role(s)"
     )
     payment_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Base Match Fee")
     
-    competitIon = models.ForeignKey(
+    competition = models.ForeignKey(
         Event,
         on_delete=models.SET_NULL,
         null=True,
@@ -103,23 +103,51 @@ class Match(models.Model):
     def __str__(self):
         return f"{self.title} ({self.date_time.strftime('%d-%m-%Y')})"
 
+class Person(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='people'
+    )
+    
+    name = models.CharField(max_length=255, verbose_name="Person Name")
+    # OPTION to add Email and Phone if needed
+    
+    class Meta:
+        ordering = ['name']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'name'],
+                name='unique_person_name_per_user'
+            )
+        ]
+        
+    def __str__(self):
+        return self.name
+
 class MatchOfficial(models.Model):
     match = models.ForeignKey(
         Match,
         on_delete=models.CASCADE,
-        related_name='officIals'
+        related_name='officials'
     )
     
-    name = models.CharField(max_length=255, verbose_name="Official Name")
+    person = models.ForeignKey(
+        Person,
+        on_delete=models.CASCADE,
+        related_name='match_official_entries',
+    )
     roles = models.ManyToManyField(
         Role,
         blank=True,
-        relate_name='officials',
+        related_name='officials',
         verbose_name="Role(s)"
     )
     
     def __str__(self):
-        return f"{self.name} ({self.roles})"
+        assigned_roles = ", ".join([role.name for role in self.roles.all()])
+        role_display = f" [{assigned_roles}]" if assigned_roles else ""
+        return f"{self.person.name}{role_display} - Match: {self.match.title}"
     
 class Payment(models.Model):
     STATUS_CHOICES = [
