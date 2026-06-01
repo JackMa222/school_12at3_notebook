@@ -1,5 +1,13 @@
 <li>
-    <a href="{{ url }}" class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+    <a href="{{ url }}" class="is-drawer-close:tooltip is-drawer-close:tooltip-right
+        {% if url == '/' and request.path == '/' %}
+            bg-primary text-primary-content font-semibold
+        {% elif url != '/' and url in request.path %}
+            bg-primary text-primary-content font-semibold
+        {% else %}
+            hover:bg-base-200
+        {% endif %}
+    "
         data-tip="{{ label }}">
         {{ slot }}
 
