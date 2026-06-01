@@ -30,6 +30,16 @@ class Organiser(models.Model):
     
     def __str__(self):
         return self.name
+ 
+class Role(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        ordering = ['name']
+        
+    def __str__(self):
+        return self.name
     
 class Event(models.Model):
     user = models.ForeignKey(
@@ -42,8 +52,12 @@ class Event(models.Model):
     starting_date = models.DateField(verbose_name="Starting Date", null=True, blank=True)
     ending_date = models.DateField(verbose_name="Ending Date", null=True, blank=True)
     location = models.CharField(max_length=255, verbose_name="Location", null=True, blank=True)
-    # TODO change roles to checklist
-    roles = models.CharField(max_length=255, verbose_name="Role(s)", null=True, blank=True)
+    roles = models.ManyToManyField(
+        Role,
+        blank=True,
+        relate_name='events',
+        verbose_name="Role(s)"
+    )
     
     organiser = models.ForeignKey(
         Organiser,
@@ -66,12 +80,15 @@ class Match(models.Model):
     date_time = models.DateTimeField(verbose_name="Date & Time")
     venue = models.CharField(max_length=255, verbose_name="Venue")
     grade = models.CharField(max_length=100, verbose_name="Grade", help_text="e.g. PL1, U18B1")
-    # TODO change roles to checklist
-    roles = models.CharField(max_length=255, verbose_name="Role(s)", null=True, blank=True)
-    
+    roles = models.ManyToManyField(
+        Role,
+        blank=True,
+        relate_name='matches',
+        verbose_name="Role(s)"
+    )
     payment_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Base Match Fee")
     
-    competiton = models.ForeignKey(
+    competitIon = models.ForeignKey(
         Event,
         on_delete=models.SET_NULL,
         null=True,
@@ -85,17 +102,21 @@ class Match(models.Model):
         
     def __str__(self):
         return f"{self.title} ({self.date_time.strftime('%d-%m-%Y')})"
-    
+
 class MatchOfficial(models.Model):
     match = models.ForeignKey(
         Match,
         on_delete=models.CASCADE,
-        related_name='officals'
+        related_name='officIals'
     )
     
     name = models.CharField(max_length=255, verbose_name="Official Name")
-    # TODO change roles to checklist
-    roles = models.CharField(max_length=255, verbose_name="Role(s)", null=True, blank=True)
+    roles = models.ManyToManyField(
+        Role,
+        blank=True,
+        relate_name='officials',
+        verbose_name="Role(s)"
+    )
     
     def __str__(self):
         return f"{self.name} ({self.roles})"
@@ -111,7 +132,7 @@ class Payment(models.Model):
     ]
     
     user = models.ForeignKey(
-        settings.AUTH_USER_model,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='payments'
     )
