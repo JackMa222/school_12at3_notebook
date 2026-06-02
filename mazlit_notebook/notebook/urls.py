@@ -9,5 +9,7 @@ urlpatterns = [
     path("organisers", views.OrganiserCreateListView.as_view(), name="organisers"),
     path("organisers/<int:pk>/", views.OrganiserUpdateView.as_view(), name='organiser_info'),
     path('organisers/<int:pk>/delete/', views.OrganiserDeleteView.as_view(), name='organiser_delete'),
-    path("payment_bodies/", views.PaymentBodyCreateListView.as_view(), name='pymt_bodies')
+    path("payment_bodies/", views.PaymentBodyCreateListView.as_view(), name='pymt_bodies'),
+    path("payment_bodies/<int:pk>/", views.PaymentBodyUpdateView.as_view(), name='pymt_bodies_info'),
+    path("payment_bodies/<int:pk>/delete/", views.PaymentBodyDeleteView.as_view(), name='pymt_bodies_delete')
 ]

@@ -80,7 +80,7 @@ class PaymentBodyCreateListView(LoginRequiredMixin, SuccessMessageMixin, CreateV
         
         rows = []
         for payment_body in payment_bodies:
-            detail_url = reverse("notebook:pymt_bodies", kwargs={'pk': payment_body.pk})
+            detail_url = reverse("notebook:pymt_bodies_info", kwargs={'pk': payment_body.pk})
             escaped_name = escape(payment_body.name)
             name_link = f'<a href="{detail_url}" class="link link-primary font-medium hover:underline">{escaped_name}</a>'
             rows.append([name_link])
@@ -88,3 +88,25 @@ class PaymentBodyCreateListView(LoginRequiredMixin, SuccessMessageMixin, CreateV
         context['table_headers'] = ["Name"]
         context['table_rows'] = rows
         return context
+    
+class PaymentBodyUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = PaymentBody
+    form_class = PaymentBodyForm
+    template_name = 'notebook/pymt_body_info.html'
+    success_message = "Payment Body '%(name)s' updated successfully"
+    
+    def get_queryset(self):
+        return PaymentBody.objects.filter(user=self.request.user)
+    
+    def get_success_url(self):
+        return reverse("notebook:pymt_bodies_info", kwargs={'pk': self.object.pk})
+    
+class PaymentBodyDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = PaymentBody
+    success_url = reverse_lazy('notebook:pymt_bodies')
+    
+    def get_queryset(self):
+        return PaymentBody.objects.filter(user=self.request.user)
+    
+    def get_success_message(self, cleaned_data):
+        return f"Payment Body '{self.object.name}' was successfully deleted."
