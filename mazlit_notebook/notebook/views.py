@@ -52,6 +52,16 @@ class OrganiserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     def get_success_url(self):
         return reverse("notebook:organiser_info", kwargs={'pk': self.object.pk})
 
+class OrganiserDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Organiser
+    success_url = reverse_lazy('notebook:organisers')
+    
+    def get_queryset(self):
+        return Organiser.objects.filter(user=self.request.user)
+    
+    def get_success_message(self, cleaned_data):
+        return f"Organisers '{self.object.name}' was successfully deleted."
+
 @login_required
 def organiser_delete(request, pk):
     if request.method == 'POST':
