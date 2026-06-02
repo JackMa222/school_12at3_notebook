@@ -10,14 +10,19 @@
     <div class="card card-border bg-base-100 shadow-lg">
         <div class="card-body">
             <h2 class="card-title">Organisers</h2>
-            <c-table
-                :headers="table_headers"
-                :rows="table_rows"
-                empty_message="No organisers found. Add one using the form on the right."
-            />
+            <c-table :headers="table_headers" :rows="table_rows"
+                empty_message="No organisers found. Add one using the form on the right." />
         </div>
     </div>
 
-<c-form :form="form" action="" class="w-full" title="Update Organiser Details" submit_text="Update" />
+    <c-form :form="form" action="" class="w-full" title="Update Organiser Details" submit_text="Update" />
+    <div class="card card-border border-error/30 bg-error/5 shadow-lg mt-6">
+        <div class="card-body">
+            <h2 class="card-title text-error text-base font-bold">Danger Zone</h2>
+            <p class="text-sm text-base-content/70 mb-2">Once you delete an organiser, it cannot be undone.</p>
+
+            <c-delete-button :url="{% url 'notebook:organiser_delete' organiser.pk %}" text="Delete Organiser Permanentely" />
+        </div>
+    </div>
 </div>
 {% endblock %}

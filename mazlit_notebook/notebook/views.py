@@ -25,7 +25,7 @@ def organisers(request):
             )
             
             messages.success(request, f"Organiser '{organiser_name}' created successfully")
-            return redirect("notebook:organiser_info", pk=organiser.pk)
+            return redirect("notebook:organisers")
     
     form = OrganiserForm()
     organisers = Organiser.objects.all()
@@ -62,7 +62,7 @@ def organiser_info(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, f"Organiser '{organiser.name} updated successfully")
-            return redirect("notebook:organisers:") # pass id beack
+            return redirect("notebook:organiser_info", pk=organiser.pk)
     else:
         form = OrganiserForm(instance=organiser) 
     
@@ -72,3 +72,15 @@ def organiser_info(request, pk):
     }
     
     return render(request, 'notebook/organiser_info.html', context)
+
+@login_required
+def organiser_delete(request, pk):
+    if request.method == 'POST':
+        organiser = get_object_or_404(Organiser, pk=pk)
+        deleted_name = organiser.name
+        
+        organiser.delete()
+        
+        messages.success(request, f"Organiser '{deleted_name} was successfully deleted.")
+
+    return redirect("notebook:organisers")
