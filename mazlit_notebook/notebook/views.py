@@ -28,7 +28,7 @@ def organisers(request):
             return redirect("notebook:organisers")
     
     form = OrganiserForm()
-    organisers = Organiser.objects.all()
+    organisers = Organiser.objects.filter(user=request.user)
     
     headers = ["Name"]
     
@@ -55,7 +55,7 @@ def organisers(request):
 
 @login_required
 def organiser_info(request, pk):
-    organiser = get_object_or_404(Organiser, pk=pk)
+    organiser = get_object_or_404(Organiser, pk=pk, user=request.user)
     
     if request.method == "POST":
         form = OrganiserForm(request.POST, instance=organiser)
@@ -76,7 +76,7 @@ def organiser_info(request, pk):
 @login_required
 def organiser_delete(request, pk):
     if request.method == 'POST':
-        organiser = get_object_or_404(Organiser, pk=pk)
+        organiser = get_object_or_404(Organiser, pk=pk, user=request.user)
         deleted_name = organiser.name
         
         organiser.delete()
