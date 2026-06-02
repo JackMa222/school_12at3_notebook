@@ -61,15 +61,3 @@ class OrganiserDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     
     def get_success_message(self, cleaned_data):
         return f"Organisers '{self.object.name}' was successfully deleted."
-
-@login_required
-def organiser_delete(request, pk):
-    if request.method == 'POST':
-        organiser = get_object_or_404(Organiser, pk=pk, user=request.user)
-        deleted_name = organiser.name
-        
-        organiser.delete()
-        
-        messages.success(request, f"Organiser '{deleted_name} was successfully deleted.")
-
-    return redirect("notebook:organisers")
