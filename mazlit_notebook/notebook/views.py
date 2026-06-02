@@ -40,25 +40,17 @@ class OrganiserCreateListView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
         context['table_rows'] = rows
         return context
 
-@login_required
-def organiser_info(request, pk):
-    organiser = get_object_or_404(Organiser, pk=pk, user=request.user)
+class OrganiserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Organiser
+    form_class = OrganiserForm
+    template_name = 'notebook/organiser_info.html'
+    success_message = "Organiser '%(name)s' updated successfully"
     
-    if request.method == "POST":
-        form = OrganiserForm(request.POST, instance=organiser)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f"Organiser '{organiser.name} updated successfully")
-            return redirect("notebook:organiser_info", pk=organiser.pk)
-    else:
-        form = OrganiserForm(instance=organiser) 
+    def get_queryset(self):
+        return Organiser.objects.filter(user=self.request.user)
     
-    context = {
-        'organiser': organiser,
-        'form': form
-    }
-    
-    return render(request, 'notebook/organiser_info.html', context)
+    def get_success_url(self):
+        return reverse("notebook:organiser_info", kwargs={'pk': self.object.pk})
 
 @login_required
 def organiser_delete(request, pk):
