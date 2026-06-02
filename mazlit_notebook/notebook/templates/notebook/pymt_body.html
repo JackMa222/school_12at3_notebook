@@ -1,0 +1,23 @@
+{% extends "notebook/layout.html" %}
+
+
+{% block title %}Payment Bodies{% endblock %}
+
+{% block navtitle %}Payment Bodies{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 px-4 py-8 items-start">
+    <div class="card card-border bg-base-100 shadow-lg">
+        <div class="card-body">
+            <h2 class="card-title">Payment Bodies</h2>
+            <c-table
+                :headers="table_headers"
+                :rows="table_rows"
+                empty_message="No payment bodies found. Add one using the form on the right."
+            />
+        </div>
+    </div>
+
+<c-form :form="form" action="" class="w-full lg:w-96" title="Create New Payment Body" />
+</div>
+{% endblock %}
