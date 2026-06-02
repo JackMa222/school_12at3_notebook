@@ -6,8 +6,8 @@ from django.views.generic import TemplateView, CreateView, UpdateView, DeleteVie
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse, reverse_lazy
-from .forms import OrganiserForm
-from .models import Organiser
+from .forms import OrganiserForm, PaymentBodyForm
+from .models import Organiser, PaymentBody
 
 # Create your views here.
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -61,3 +61,30 @@ class OrganiserDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     
     def get_success_message(self, cleaned_data):
         return f"Organisers '{self.object.name}' was successfully deleted."
+    
+class PaymentBodyCreateListView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = PaymentBody
+    form_class = PaymentBodyForm
+    template_name = 'notebook/pymt_body.html'
+    success_url = reverse_lazy('notebook:pymt_bodies')
+    success_message = f"Payment body '%(name)s' created successfully"
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        payment_bodies = PaymentBody.objects.filter(user=self.request.user)
+        
+        rows = []
+        for payment_body in payment_bodies:
+            detail_url = reverse("notebook:pymt_bodies", kwargs={'pk': payment_body.pk})
+            escaped_name = escape(payment_body.name)
+            name_link = f'<a href="{detail_url}" class="link link-primary font-medium hover:underline">{escaped_name}</a>'
+            rows.append([name_link])
+            
+        context['table_headers'] = ["Name"]
+        context['table_rows'] = rows
+        return context
