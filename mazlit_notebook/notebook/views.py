@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.html import escape
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -17,7 +17,7 @@ def organisers(request):
         form = OrganiserForm(request.POST)
         
         if form.is_valid():
-            organiser_name = form.cleaned_data.get('organiser_name')
+            organiser_name = form.cleaned_data.get('name')
             
             new_organiser = Organiser.objects.create(
                 name=organiser_name,
@@ -25,7 +25,7 @@ def organisers(request):
             )
             
             messages.success(request, f"Organiser '{organiser_name}' created successfully")
-            return redirect("notebook:organisers")
+            return redirect("notebook:organiser_info", pk=organiser.pk)
     
     form = OrganiserForm()
     organisers = Organiser.objects.all()
@@ -55,4 +55,20 @@ def organisers(request):
 
 @login_required
 def organiser_info(request, pk):
-    return redirect("/")
+    organiser = get_object_or_404(Organiser, pk=pk)
+    
+    if request.method == "POST":
+        form = OrganiserForm(request.POST, instance=organiser)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Organiser '{organiser.name} updated successfully")
+            return redirect("notebook:organisers:") # pass id beack
+    else:
+        form = OrganiserForm(instance=organiser) 
+    
+    context = {
+        'organiser': organiser,
+        'form': form
+    }
+    
+    return render(request, 'notebook/organiser_info.html', context)
