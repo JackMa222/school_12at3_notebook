@@ -11,5 +11,7 @@ urlpatterns = [
     path('organisers/<int:pk>/delete/', views.OrganiserDeleteView.as_view(), name='organiser_delete'),
     path("payment_bodies/", views.PaymentBodyCreateListView.as_view(), name='pymt_bodies'),
     path("payment_bodies/<int:pk>/", views.PaymentBodyUpdateView.as_view(), name='pymt_bodies_info'),
-    path("payment_bodies/<int:pk>/delete/", views.PaymentBodyDeleteView.as_view(), name='pymt_bodies_delete')
+    path("payment_bodies/<int:pk>/delete/", views.PaymentBodyDeleteView.as_view(), name='pymt_bodies_delete'),
+    path("payments/", views.IndexView.as_view(), name="payments"),
+    path("payments/new/", views.PaymentCreateView.as_view(), name="payment_create")
 ]

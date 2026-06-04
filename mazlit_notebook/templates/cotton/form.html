@@ -1,7 +1,7 @@
 <div {{ attributes.class }} class="card card-border bg-base-100 w-full shadow-lg">
     <div class="card-body">
         <h2 class="card-title">{{ title }}</h2>
-        <form action="{{ action|default:'' }}" method="post" class="space-y-4 {{ class }}">
+        <form action="{{ action|default:'' }}" method="post" class="space-y-4 {{ form_class }}">
             {% csrf_token %}
 
             {% if form.non_field_errors %}
@@ -17,6 +17,12 @@
                 </div>
 
                 <div class="relative mt-1">
+                    {% if field.name == 'amount' %}
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10">
+                        <span class="text-base-content/40 font-semibold text-sm">$</span>
+                    </div>
+                    {% endif %}
+
                     {{ field }}
                 </div>
 

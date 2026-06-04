@@ -151,13 +151,15 @@ class MatchOfficial(models.Model):
     
 class Payment(models.Model):
     STATUS_CHOICES = [
-        ('OUTSTANDING_REIMB', 'Reimbursement Outstanding'),
         ('OUTSTANDING', 'Outstanding'),
+        ('OUTSTANDING_REIMB', 'Reimbursement Outstanding'),
         ('PAID_REIMB', 'Reimbursement Paid'),
         ('PYMT_INDIV', 'Individual Payments'),
         ('PYMT_NONE', 'No Payment'),
         ('PAID', 'Paid')
     ]
+    
+    name = models.CharField(max_length=255, verbose_name="Payment Name/Description")
     
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -192,7 +194,7 @@ class Payment(models.Model):
     payment_status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='PENDING',
+        default=STATUS_CHOICES[0],
         verbose_name='Payment Status'
     )
     

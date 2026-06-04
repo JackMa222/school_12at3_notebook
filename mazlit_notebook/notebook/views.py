@@ -2,12 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.html import escape
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse, reverse_lazy
-from .forms import OrganiserForm, PaymentBodyForm
-from .models import Organiser, PaymentBody
+from .forms import OrganiserForm, PaymentBodyForm, PaymentForm
+from .models import Organiser, PaymentBody, Payment
 
 # Create your views here.
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -110,3 +110,19 @@ class PaymentBodyDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView)
     
     def get_success_message(self, cleaned_data):
         return f"Payment Body '{self.object.name}' was successfully deleted."
+    
+class PaymentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Payment
+    form_class = PaymentForm
+    template_name = 'notebook/payment_form.html'
+    success_url = reverse_lazy('notebook:payments')
+    success_message = "Payment entry successfully recorded!"
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
