@@ -1,0 +1,55 @@
+{% extends "notebook/layout.html" %}
+
+
+{% block title %}Organisers{% endblock %}
+
+{% block navtitle %}Organisers{% endblock %}
+
+{% block content %}
+<div class="px-4 py-8 max-w-7xl mx-auto space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
+        <div class="stat card card-border bg-base-100 shadow-sm">
+            <div class="stat-title text-sm font-medium">Total Entries</div>
+            <div class="stat-value text-2xl mt-1 text-base-content">{{ stats.total_count }}</div>
+            <div class="stat-desc mt-1 text-base-content/50">Recorded items</div>
+        </div>
+        <div class="stat card card-border bg-base-100 shadow-sm">
+            <div class="stat-title text-sm font-medium text-success">Total Paid</div>
+            <div class="stat-value text-2xl mt-1 text-success">${{ stats.paid|stringformat:".2f" }}</div>
+            <div class="stat-desc mt-1 text-base-content/50">Earnings collected</div>
+        </div>
+        <div class="stat card card-border bg-base-100 shadow-sm">
+            <div class="stat-title text-sm font-medium text-error">Outstanding Fees</div>
+            <div class="stat-value text-2xl mt-1 text-error">${{ stats.outstanding|stringformat:".2f" }}</div>
+            <div class="stat-desc mt-1 text-base-content/50">Awaiting processing</div>
+        </div>
+        <div class="stat card card-border bg-base-100 shadow-sm">
+            <div class="stat-title text-sm font-medium text-warning">Reimbursements Due</div>
+            <div class="stat-value text-2xl mt-1 text-warning">${{ stats.reimb_outstanding|stringformat:".2f" }}
+            </div>
+            <div class="stat-desc mt-1 text-base-content/50">Out of pocket tracking</div>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between pt-2">
+        <div>
+            <h1 class="text-xl font-bold tracking-tight">Payment Tracker</h1>
+            <p class="text-xs text-base-content/60">Click on any entry description title link to edit details or delete
+                records.</p>
+        </div>
+        <a href="{% url 'notebook:payment_create' %}" class="btn btn-primary gap-2 items-center">
+            Record New Payment<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+        </a>
+    </div>
+    <div class="card card-border bg-base-100 shadow-lg w-full">
+        <div class="card-body p-0 md:p-6">
+            <c-table :headers="table_headers" :rows="table_rows"
+                empty_message="No payment history logs recorded. Click 'Record New Payment' to create one." />
+        </div>
+    </div>
+</div>
+{% endblock %}
