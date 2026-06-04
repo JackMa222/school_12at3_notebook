@@ -126,3 +126,22 @@ class PaymentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+    
+class PaymentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Payment
+    form_class = PaymentForm
+    template_name = 'notebook/payment_form.html'
+    success_url = reverse_lazy('notebook:payments')
+    success_message = "Payment entry successfully updated!"
+    
+    def get_queryset(self):
+        return Payment.objects.filter(user=self.request.user)
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)

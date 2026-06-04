@@ -13,5 +13,6 @@ urlpatterns = [
     path("payment_bodies/<int:pk>/", views.PaymentBodyUpdateView.as_view(), name='pymt_bodies_info'),
     path("payment_bodies/<int:pk>/delete/", views.PaymentBodyDeleteView.as_view(), name='pymt_bodies_delete'),
     path("payments/", views.IndexView.as_view(), name="payments"),
-    path("payments/new/", views.PaymentCreateView.as_view(), name="payment_create")
+    path("payments/new/", views.PaymentCreateView.as_view(), name="payment_create"),
+    path("payments/<int:pk>/edit/", views.PaymentUpdateView.as_view(), name="payment_edit")
 ]

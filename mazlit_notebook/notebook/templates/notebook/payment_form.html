@@ -1,14 +1,14 @@
 {% extends "notebook/layout.html" %}
 
 
-{% block title %}Payment Bodies{% endblock %}
+{% block title %}Payments{% endblock %}
 
-{% block navtitle %}Payment Bodies{% endblock %}
+{% block navtitle %}Payments{% endblock %}
 
 {% block content %}
 <main class="p-6 flex justify-center items-center grow bg-base-100">
     <div class="w-full max-w-lg">
-        <c-form :form="form" action="" class="w-full lg:w-96" title="Create New Payment" />
+        <c-form :form="form" action="" class="w-full lg:w-96" title="{% if object %}Update Payment{% else %}Record New Payment{% endif %}" submit_text="{% if object %}Save Changes{% else %}Save Payment Record{% endif %}" />
     </div>
 </main>
 {% endblock %}
