@@ -145,3 +145,13 @@ class PaymentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+    
+class PaymentDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Payment
+    success_url = reverse_lazy('notebook:payments')
+    
+    def get_queryset(self):
+        return Payment.objects.filter(user=self.request.user)
+    
+    def get_success_message(self, cleaned_data):
+        return f"Payment '{self.object.name}' was successfully deleted."
