@@ -6,6 +6,7 @@ from django.views.generic import TemplateView, CreateView, ListView, UpdateView,
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse, reverse_lazy
+from django.db.models import Sum
 from .forms import OrganiserForm, PaymentBodyForm, PaymentForm
 from .models import Organiser, PaymentBody, Payment
 
@@ -155,3 +156,58 @@ class PaymentDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     
     def get_success_message(self, cleaned_data):
         return f"Payment '{self.object.name}' was successfully deleted."
+    
+class PaymentListView(LoginRequiredMixin, ListView):
+    model = Payment
+    template_name = 'notebook/payments.html'
+    context_object_name = 'payments'
+    
+    def get_queryset(self):
+        return Payment.objects.filter(user=self.request.user)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_payments = self.get_queryset()
+        
+        outstanding = user_payments.filter(payment_status='OUTSTANDING').aggregate(total=Sum('amount'))['total'] or 0.00
+        reimb_outstanding = user_payments.filter(payment_status='OUTSTANDING_REIMB').aggregate(total=Sum('amount'))['total'] or 0.00
+        paid = user_payments.filter(payment_status__in=['PAID', 'PAID_REIMB']).aggregate(total=Sum('amount'))['total'] or 0.00
+        
+        context['stats'] = {
+            'outstanding': outstanding,
+            'reimb_outstanding': reimb_outstanding,
+            'paid': paid,
+            'total_count': user_payments.count()
+        }
+        rows = []
+        
+        for payment in user_payments:
+            detail_url = reverse("notebook:payment_edit", kwargs={'pk': payment.pk})
+            escaped_name = escape(payment.name)
+            name_link = f'<a href="{detail_url}" class="link link-primary font-medium hover:underline">{escaped_name}</a>'
+            
+            status_mapping = {
+                'PAID': '<span class="badge badge-success text-white">Paid</span>',
+                'PAID_REIMB': '<span class="badge badge-success text-white">Reimbursement Paid</span>',
+                'OUTSTANDING': '<span class="badge badge-error text-white">Outstanding</span>',
+                'OUTSTANDING_REIMB': '<span class="badge badge-warning text-warning-content">Reimbursement Outstanding</span>',
+                'PYMT_INDIV': '<span class="badge badge-info text-white">Individual Payments</span>',
+                'PYMT_NONE': '<span class="badge badge-ghost">No Payment</span>'
+            }
+            
+            stauts_badge = status_mapping.get(payment.payment_status, f'<span class="badge">{payment.payment_status}</span>')
+            linked_ref = escape(payment.linked_item) if payment.linked_item else '<span class="text-base-content/30">-</span>'
+            payment_body = escape(payment.payment_body.name) if payment.payment_body else '<span class="text-base-content/30">-</span>'
+            
+            rows.append([
+                name_link,
+                linked_ref,
+                payment_body,
+                f"${payment.amount}",
+                stauts_badge
+            ])
+            
+        context['table_headers'] = ["Description", "Linked To", "Payer", "Amount", "Status"]
+        context['table_rows'] = rows
+        return context
+            

@@ -11,6 +11,8 @@
         <c-form :form="form" action="" class="w-full lg:w-96"
             title="{% if object %}Update Payment{% else %}Record New Payment{% endif %}"
             submit_text="{% if object %}Save Changes{% else %}Save Payment Record{% endif %}" />
+
+        {% if object %}
         <div class="card card-border border-error/30 bg-error/5 shadow-lg">
             <div class="card-body">
                 <h2 class="card-title text-error text-base font-bold">Danger Zone</h2>
@@ -20,6 +22,7 @@
                     text="Delete Payment Permanentely" />
             </div>
         </div>
+        {% endif %}
     </div>
 
 </main>
