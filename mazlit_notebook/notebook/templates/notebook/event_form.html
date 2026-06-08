@@ -1,0 +1,29 @@
+{% extends "notebook/layout.html" %}
+
+
+{% block title %}Events{% endblock %}
+
+{% block navtitle %}Events{% endblock %}
+
+{% block content %}
+<main class="p-6 flex justify-center items-center grow bg-base-100">
+    <div class="w-full max-w-lg space-y-6">
+        <c-form :form="form" action="" class="w-full lg:w-96"
+            title="{% if object %}Update Event{% else %}Record New Event{% endif %}"
+            submit_text="{% if object %}Save Changes{% else %}Save Event{% endif %}" />
+
+        {% if object %}
+        <div class="card card-border border-error/30 bg-error/5 shadow-lg">
+            <div class="card-body">
+                <h2 class="card-title text-error text-base font-bold">Danger Zone</h2>
+                <p class="text-sm text-base-content/70 mb-2">Once you delete an event, it cannot be undone.</p>
+
+                <c-delete-button :url="{ url 'notebook:payment_delete' payment.pk }"
+                    text="Delete Event Permanentely" />
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+</main>
+{% endblock %}

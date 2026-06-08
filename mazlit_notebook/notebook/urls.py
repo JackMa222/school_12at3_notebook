@@ -15,5 +15,6 @@ urlpatterns = [
     path("payments/", views.PaymentListView.as_view(), name="payments"),
     path("payments/new/", views.PaymentCreateView.as_view(), name="payment_create"),
     path("payments/<int:pk>/", views.PaymentUpdateView.as_view(), name="payment_edit"),
-    path("payments/<int:pk>/delete", views.PaymentDeleteView.as_view(), name="payment_delete")
+    path("payments/<int:pk>/delete", views.PaymentDeleteView.as_view(), name="payment_delete"),
+    path("events/new/", views.EventCreateView.as_view(), name="event_create"),
 ]

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Organiser, PaymentBody, Payment
+from .models import Organiser, PaymentBody, Payment, Event
 #from django.contrib.auth import get_user_model
 
 #User = get_user_model()
@@ -63,3 +63,47 @@ class PaymentForm(forms.ModelForm):
         if user:
             self.fields['payment_body'].queryset = PaymentBody.objects.filter(user=user)
             self.fields['payment_body'].empty_label = "Select Payment Body"
+            
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        
+        fields = ['name', 'starting_date', 'ending_date', 'location', 'roles', 'organiser']
+        
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'input input-bordered w-full',
+                'placeholder': 'e.g. 2026 HNSW U16 FSC'
+            }),
+            'starting_date': forms.DateInput(attrs={
+                'class': 'input input-bordered w-full',
+                'type': 'date'
+            }),
+            'ending_date': forms.DateInput(attrs={
+                'class': 'input input-bordered w-full',
+                'type': 'date'
+            }),
+            'location': forms.TextInput(attrs={
+                'class': 'input input-bordered w-full',
+                'placeholder': 'e.g. Hobart, Tasmania'
+            }),
+            'amount': forms.NumberInput(attrs={
+                'class': 'input input-bordered w-full pl-6',
+                'placeholder': '0.00',
+                'step': '0.01'
+            }),
+            'organiser': forms.Select(attrs={
+                'class': 'select select-bordered w-full'
+            }),
+            'roles': forms.SelectMultiple(attrs={
+                'class': 'select select-bordered w-full'
+            })
+        }
+        
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        
+        if user:
+            self.fields['organiser'].queryset = Organiser.objects.filter(user=user)
+            self.fields['organiser'].empty_label = "Select Organiser"
