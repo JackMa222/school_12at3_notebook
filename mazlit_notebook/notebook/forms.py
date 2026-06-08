@@ -46,7 +46,7 @@ class PaymentForm(forms.ModelForm):
             'amount': forms.NumberInput(attrs={
                 'class': 'input input-bordered w-full pl-6',
                 'placeholder': '0.00',
-                'step': '1'
+                'step': '0.01'
             }),
             'payment_status': forms.Select(attrs={
                 'class': 'select select-bordered w-full'
