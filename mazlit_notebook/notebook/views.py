@@ -195,7 +195,7 @@ class PaymentListView(LoginRequiredMixin, ListView):
                 'PYMT_NONE': '<span class="badge badge-ghost">No Payment</span>'
             }
             
-            stauts_badge = status_mapping.get(payment.payment_status, f'<span class="badge">{payment.payment_status}</span>')
+            status_badge = status_mapping.get(payment.payment_status, f'<span class="badge">{payment.payment_status}</span>')
             linked_ref = escape(payment.linked_item) if payment.linked_item else '<span class="text-base-content/30">-</span>'
             payment_body = escape(payment.payment_body.name) if payment.payment_body else '<span class="text-base-content/30">-</span>'
             
@@ -204,7 +204,7 @@ class PaymentListView(LoginRequiredMixin, ListView):
                 linked_ref,
                 payment_body,
                 f"${payment.amount}",
-                stauts_badge
+                status_badge
             ])
             
         context['table_headers'] = ["Description", "Linked To", "Payer", "Amount", "Status"]
@@ -255,3 +255,52 @@ class EventDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     
     def get_success_message(self, cleaned_data):
         return f"Event '{self.object.name}' was successfully deleted."
+    
+class EventListView(LoginRequiredMixin, ListView):
+    model = Event
+    template_name = 'notebook/events.html'
+    context_object_name = 'events'
+    
+    def get_queryset(self):
+        return Event.objects.filter(user=self.request.user)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_events = self.get_queryset()
+               
+        context['stats'] = {
+            'total_count': user_events.count()
+        }
+        rows = []
+        
+        for event in user_events:
+            detail_url = reverse("notebook:event_edit", kwargs={'pk': event.pk})
+            escaped_name = escape(event)
+            name_link = f'<a href="{detail_url}" class="link link-primary font-medium hover:underline">{escaped_name}</a>'
+            escaped_start = escape(event.starting_date)
+            escaped_end = escape(event.ending_date)
+            escaped_location = escape(event.location)
+            escaped_organiser = escape(event.organiser.name)
+            
+            role_badges = []
+            for role in event.roles.all():
+                escaped_role_name = escape(role.name)
+                css_class = role.badge_class if role.badge_class else "badge-ghost"
+                
+                badge_html = f'<span class="badge {css_class} text-xs font-semibold mr-1">{escaped_role_name}</span>'
+                role_badges.append(badge_html)
+                
+            role_badges = "".join(role_badges) if role_badges else '-'
+            
+            rows.append([
+                name_link,
+                escaped_start,
+                escaped_end,
+                escaped_location,
+                role_badges,
+                escaped_organiser
+            ])
+            
+        context['table_headers'] = ["Name", "Start", "End", "Location", "Roles", "Organiser"]
+        context['table_rows'] = rows
+        return context

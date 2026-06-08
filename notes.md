@@ -1,2 +1,5 @@
-Next to work on: 4/6 5pm
-- Move onto events
+Next to work on: 9/6 9am
+- Finish Events
+- Update Role Badge colors
+- Add linked payments
+- Other linked thingos

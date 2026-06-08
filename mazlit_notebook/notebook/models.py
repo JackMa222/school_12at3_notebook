@@ -34,6 +34,11 @@ class Organiser(models.Model):
 class Role(models.Model):
     name = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
+    badge_class = models.CharField(
+        max_length=50,
+        default="badge-ghost",
+        help_text="DaisyUI color class: badge-primary, badge-secondary, badge-info, badge-success, etc."
+    )
     
     class Meta:
         ordering = ['name']
