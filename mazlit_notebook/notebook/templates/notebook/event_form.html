@@ -18,7 +18,7 @@
                 <h2 class="card-title text-error text-base font-bold">Danger Zone</h2>
                 <p class="text-sm text-base-content/70 mb-2">Once you delete an event, it cannot be undone.</p>
 
-                <c-delete-button :url="{ url 'notebook:payment_delete' payment.pk }"
+                <c-delete-button :url="{% url 'notebook:event_delete' event.pk %}"
                     text="Delete Event Permanentely" />
             </div>
         </div>

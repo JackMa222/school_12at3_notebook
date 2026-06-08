@@ -245,4 +245,13 @@ class EventUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
-            
+
+class EventDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Event
+    success_url = reverse_lazy('notebook:events')
+    
+    def get_queryset(self):
+        return Event.objects.filter(user=self.request.user)
+    
+    def get_success_message(self, cleaned_data):
+        return f"Event '{self.object.name}' was successfully deleted."
