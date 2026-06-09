@@ -324,3 +324,22 @@ class MatchCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+    
+class MatchUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Match
+    form_class = MatchForm
+    template_name = 'notebook/match_form.html'
+    success_url = reverse_lazy('notebook:matches')
+    success_message = "Match successfully updated!"
+    
+    def get_queryset(self):
+        return Match.objects.filter(user=self.request.user)
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)

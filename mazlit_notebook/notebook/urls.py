@@ -22,4 +22,5 @@ urlpatterns = [
     path("events/<int:pk>/delete", views.EventDeleteView.as_view(), name="event_delete"),
     path("matches/", views.IndexView.as_view(), name="matches"),
     path("matches/new/", views.MatchCreateView.as_view(), name="match_create"),
+    path("matches/<int:pk>/", views.MatchUpdateView.as_view(), name="match_edit"),
 ]
