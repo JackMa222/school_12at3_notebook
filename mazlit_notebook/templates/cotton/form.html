@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="relative mt-1">
-                    {% if field.name == 'amount' %}
+                    {% if field.name == 'amount' or field.name == 'payment_fee' %}
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10">
                         <span class="text-base-content/40 font-semibold text-sm">$</span>
                     </div>

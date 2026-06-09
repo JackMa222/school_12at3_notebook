@@ -1,5 +1,5 @@
 from django import forms
-from .models import Organiser, PaymentBody, Payment, Event
+from .models import Organiser, PaymentBody, Payment, Event, Match
 #from django.contrib.auth import get_user_model
 
 #User = get_user_model()
@@ -107,3 +107,49 @@ class EventForm(forms.ModelForm):
         if user:
             self.fields['organiser'].queryset = Organiser.objects.filter(user=user)
             self.fields['organiser'].empty_label = "Select Organiser"
+            
+class MatchForm(forms.ModelForm):
+    class Meta:
+        model = Match
+        
+        fields = ['title', 'date_time', 'venue', 'grade', 'roles', 'payment_fee', 'competition']
+        
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'input input-bordered w-full',
+                'placeholder': 'e.g. Belgium vs Germany (Final)'
+            }),
+            'date_time': forms.DateTimeInput(attrs={
+                'class': 'input input-bordered w-full focus:input-primary',
+                'type': 'datetime-local'
+            }),
+            'venue': forms.TextInput(attrs={
+                'class': 'input input-bordered w-full',
+                'placeholder': 'e.g. Sydney Olympic Park OP1'
+            }),
+            'grade': forms.TextInput(attrs={
+                'class': 'input input-bordered w-full',
+                'placeholder': 'e.g. PL1'
+            }),
+            'roles': forms.SelectMultiple(attrs={
+                'class': 'select select-bordered w-full'
+            }),
+            'payment_fee': forms.NumberInput(attrs={
+                'class': 'input input-bordered w-full pl-6',
+                'placeholder': '0.00',
+                'step': '0.01'
+            }),
+            'competition': forms.Select(attrs={
+                'class': 'select select-bordered w-full'
+            })            
+        }
+        
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        
+        self.fields['roles'].empty_label = "Select Role"
+        
+        if user:
+            self.fields['competition'].queryset = Event.objects.filter(user=user)
+            self.fields['competition'].empty_label = "Select Competition"

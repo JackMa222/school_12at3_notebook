@@ -8,8 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse, reverse_lazy
 from django.db.models import Sum
-from .forms import OrganiserForm, PaymentBodyForm, PaymentForm, EventForm
-from .models import Organiser, PaymentBody, Payment, Event
+from .forms import OrganiserForm, PaymentBodyForm, PaymentForm, EventForm, MatchForm
+from .models import Organiser, PaymentBody, Payment, Event, Match
 
 # Create your views here.
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -308,3 +308,19 @@ class EventListView(LoginRequiredMixin, ListView):
         context['table_headers'] = ["Name", "Start", "End", "Location", "Roles", "Organiser"]
         context['table_rows'] = rows
         return context
+    
+class MatchCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Match
+    form_class = MatchForm
+    template_name = 'notebook/match_form.html'
+    success_url = reverse_lazy('notebook:matches')
+    success_message = "Match successfully recorded!"
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
