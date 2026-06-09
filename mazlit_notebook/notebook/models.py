@@ -172,18 +172,14 @@ class Payment(models.Model):
         related_name='payments'
     )
         
-    match = models.ForeignKey(
+    matches = models.ManyToManyField(
         Match,
-        on_delete=models.CASCADE,
         related_name='payments',
-        null=True,
         blank=True
     )
     
-    event = models.ForeignKey(
+    events = models.ManyToManyField(
         Event,
-        on_delete=models.CASCADE,
-        null=True,
         blank=True,
         related_name='payments'
     )
@@ -205,22 +201,22 @@ class Payment(models.Model):
     
     @property
     def linked_item(self):
-        if self.match and self.event:
-            return f"{self.match.title} / {self.event.name}"
-        if self.match:
-            return self.match
-        if self.event:
-            return self.event
-        return None
+        match_titles = [match.title for match in self.matches.all()]
+        event_names = [event.name for event in self.events.all()]
+        
+        all_links = match_titles + event_names
+        return " / ".join(all_links) if all_links else None
     
     def __str__(self):
         parts = []
         
-        if self.match:
-            parts.append(f"Match: {self.match.title}")
+        if self.id and self.matches.exists():
+            match_titles = ", ".join([m.title for m in self.matches.all()])
+            parts.append(f"Matches: [{match_titles}]")
             
-        if self.event:
-            parts.append(f"Event: {self.event.name}")
+        if self.id and self.events.exists():
+            event_names = ", ".join([e.name for e in self.events.all()])
+            parts.append(f"Events: [{event_names}]")
             
         linked_to = " | ".join(parts) if parts else "Unlinked payment"
         
