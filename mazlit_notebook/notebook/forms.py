@@ -36,7 +36,7 @@ class PaymentForm(forms.ModelForm):
     class Meta:
         model = Payment
         
-        fields = ['name', 'amount', 'payment_status', 'payment_body']
+        fields = ['name', 'amount', 'payment_status', 'payment_body', 'matches', 'events']
         
         widgets = {
             'name': forms.TextInput(attrs={
@@ -53,7 +53,9 @@ class PaymentForm(forms.ModelForm):
             }),
             'payment_body': forms.Select(attrs={
                 'class': 'select select-bordered w-full'
-            })
+            }),
+            'matches': forms.CheckboxSelectMultiple(),
+            'events': forms.CheckboxSelectMultiple()
         }
         
     def __init__(self, *args, **kwargs):
@@ -63,6 +65,9 @@ class PaymentForm(forms.ModelForm):
         if user:
             self.fields['payment_body'].queryset = PaymentBody.objects.filter(user=user)
             self.fields['payment_body'].empty_label = "Select Payment Body"
+            
+            self.fields['matches'].queryset = Match.objects.filter(user=user)
+            self.fields['events'].queryset = Event.objects.filter(user=user)
             
 class EventForm(forms.ModelForm):
     class Meta:

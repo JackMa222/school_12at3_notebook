@@ -282,10 +282,10 @@ class EventListView(LoginRequiredMixin, ListView):
             detail_url = reverse("notebook:event_edit", kwargs={'pk': event.pk})
             escaped_name = escape(event)
             name_link = f'<a href="{detail_url}" class="link link-primary font-medium hover:underline">{escaped_name}</a>'
-            escaped_start = escape(event.starting_date)
-            escaped_end = escape(event.ending_date)
-            escaped_location = escape(event.location)
-            escaped_organiser = escape(event.organiser.name)
+            escaped_start = escape(event.starting_date) if event.starting_date else ""
+            escaped_end = escape(event.ending_date) if event.ending_date else ""
+            escaped_location = escape(event.location) if event.location else ""
+            escaped_organiser = escape(event.organiser.name) if event.organiser else ""
             
             role_badges = []
             for role in event.roles.all():
@@ -382,10 +382,10 @@ class MatchListView(LoginRequiredMixin, ListView):
             t = Template('{% load tz %}{{ dt|localtime|date:"SHORT_DATETIME_FORMAT" }}')
             clean_date = t.render(Context({'dt': match.date_time}))
             date_html = f'<span class="whitespace-nowrap">{clean_date}</span>'
-            escaped_venue = escape(match.venue)
-            escaped_grade = escape(match.grade)
-            escaped_fee = f"${escape(match.payment_fee)}"
-            escaped_competition = escape(match.competition)
+            escaped_venue = escape(match.venue) if match.venue else ""
+            escaped_grade = escape(match.grade) if match.grade else ""
+            escaped_fee = f"${escape(match.payment_fee)}" if match.payment_fee else ""
+            escaped_competition = escape(match.competition) if match.competition else ""
             
             role_badges = []
             for role in match.roles.all():

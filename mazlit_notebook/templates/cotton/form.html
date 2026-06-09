@@ -15,17 +15,24 @@
                 <div class="form-group flex flex-col">
                     <label for="{{ field.id_for_label }}" class="font-medium text-sm">{{ field.label }}</label>
                 </div>
-
+                {% if field.name == 'matches' or field.name == 'events' %}
+                <div class="p-4 bg-base-100 border border-base-300 rounded-lg h-48 overflow-y-auto space-y-2 focus-within:border-primary transition-colors">
+                    <div class="prose-sm checkbox-group [&_ul]:list-none [&_ul]:p-0 [&_ul]:m-0 [&_li]:flex [&_li]:items-center [&_li]:gap-3 [&_li]:mb-5 [&_input]:checkbox [&_input]:checkbox [&_input]:checkbox-primary [&_label]:text-sm [&_label]:cursor-pointer">
+                        {{ field }}
+                    </div>
+                </div>
+                {% else %}
                 <div class="relative mt-1">
                     {% if field.name == 'amount' or field.name == 'payment_fee' %}
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10">
                         <span class="text-base-content/40 font-semibold text-sm">$</span>
                     </div>
                     {% endif %}
-
+        
+                    
                     {{ field }}
                 </div>
-
+                {% endif %}
                 {% if field.errors %}
                 <span class="text-xs text-red-500 mt-1">
                     {{ field.errors|striptags }}
