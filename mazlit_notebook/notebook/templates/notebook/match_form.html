@@ -18,8 +18,8 @@
                 <h2 class="card-title text-error text-base font-bold">Danger Zone</h2>
                 <p class="text-sm text-base-content/70 mb-2">Once you delete an match, it cannot be undone.</p>
 
-                <c-delete-button :url="{% url 'notebook:event_delete' match.pk %}"
-                    text="Delete Event Permanentely" />
+                <c-delete-button :url="{% url 'notebook:match_delete' match.pk %}"
+                    text="Delete Match Permanentely" />
             </div>
         </div>
         {% endif %}

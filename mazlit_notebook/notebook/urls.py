@@ -23,4 +23,5 @@ urlpatterns = [
     path("matches/", views.IndexView.as_view(), name="matches"),
     path("matches/new/", views.MatchCreateView.as_view(), name="match_create"),
     path("matches/<int:pk>/", views.MatchUpdateView.as_view(), name="match_edit"),
+    path("matches/<int:pk>/delete", views.MatchDeleteView.as_view(), name="match_delete"),
 ]

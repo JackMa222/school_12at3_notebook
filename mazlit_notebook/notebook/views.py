@@ -343,3 +343,13 @@ class MatchUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+class MatchDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Match
+    success_url = reverse_lazy('notebook:matches')
+    
+    def get_queryset(self):
+        return Match.objects.filter(user=self.request.user)
+    
+    def get_success_message(self, cleaned_data):
+        return f"Match '{self.object.title}' was successfully deleted."
