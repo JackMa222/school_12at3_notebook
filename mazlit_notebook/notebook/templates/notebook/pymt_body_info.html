@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <c-form :form="form" action="" class="w-full" title="Update Payment Body Details" submit_text="Update" />
+    <c-form :form="form" action="" class="w-full" cancel_url="{% url 'notebook:pymt_bodies' %}" title="Update Payment Body Details" submit_text="Update" />
     <div class="card card-border border-error/30 bg-error/5 shadow-lg">
         <div class="card-body">
             <h2 class="card-title text-error text-base font-bold">Danger Zone</h2>

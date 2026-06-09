@@ -10,6 +10,7 @@
     <div class="w-full max-w-lg space-y-6">
         <c-form :form="form" action="" class="w-full lg:w-96"
             title="{% if object %}Update Payment{% else %}Record New Payment{% endif %}"
+            cancel_url="{% url 'notebook:payments' %}"
             submit_text="{% if object %}Save Changes{% else %}Save Payment Record{% endif %}" />
 
         {% if object %}

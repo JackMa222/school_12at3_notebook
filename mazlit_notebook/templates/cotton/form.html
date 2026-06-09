@@ -16,8 +16,10 @@
                     <label for="{{ field.id_for_label }}" class="font-medium text-sm">{{ field.label }}</label>
                 </div>
                 {% if field.name == 'matches' or field.name == 'events' %}
-                <div class="p-4 bg-base-100 border border-base-300 rounded-lg h-48 overflow-y-auto space-y-2 focus-within:border-primary transition-colors">
-                    <div class="prose-sm checkbox-group [&_ul]:list-none [&_ul]:p-0 [&_ul]:m-0 [&_li]:flex [&_li]:items-center [&_li]:gap-3 [&_li]:mb-5 [&_input]:checkbox [&_input]:checkbox [&_input]:checkbox-primary [&_label]:text-sm [&_label]:cursor-pointer">
+                <div
+                    class="p-4 bg-base-100 border border-base-300 rounded-lg h-48 overflow-y-auto space-y-2 focus-within:border-primary transition-colors">
+                    <div
+                        class="prose-sm checkbox-group [&_ul]:list-none [&_ul]:p-0 [&_ul]:m-0 [&_li]:flex [&_li]:items-center [&_li]:gap-3 [&_li]:mb-5 [&_input]:checkbox [&_input]:checkbox [&_input]:checkbox-primary [&_label]:text-sm [&_label]:cursor-pointer">
                         {{ field }}
                     </div>
                 </div>
@@ -28,8 +30,8 @@
                         <span class="text-base-content/40 font-semibold text-sm">$</span>
                     </div>
                     {% endif %}
-        
-                    
+
+
                     {{ field }}
                 </div>
                 {% endif %}
@@ -41,10 +43,15 @@
             </div>
             {% endfor %}
 
-            <div class="card-actions justify-end">
+            <div class="card-actions justify-end items-center gap-2 pt-4 border-t border-base-200 mt-6">
                 {% if slot %}
                 {{ slot }}
                 {% else %}
+                {% if cancel_url %}
+                <a href="{{ cancel_url }}" class="btn btn-ghost btn-sm sm:btn-md text-base-content/60 hover:text-error">
+                    Exit without saving
+                </a>
+                {% endif %}
                 <button type="submit" class="btn">{{ submit_text|default:"Submit" }}</button>
                 {% endif %}
             </div>
