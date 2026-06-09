@@ -7,27 +7,16 @@
 
 {% block content %}
 <div class="px-4 py-8 max-w-7xl mx-auto space-y-6">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 w-full">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
         <div class="stat card card-border bg-base-100 shadow-sm">
             <div class="stat-title text-sm font-medium">Total Events</div>
             <div class="stat-value text-2xl mt-1 text-base-content">{{ stats.total_count }}</div>
             <div class="stat-desc mt-1 text-base-content/50">Recorded Events</div>
         </div>
         <div class="stat card card-border bg-base-100 shadow-sm">
-            <div class="stat-title text-sm font-medium text-success">Total Paid</div>
-            <div class="stat-value text-2xl mt-1 text-success">${ stats.paid|stringformat:".2f" }</div>
-            <div class="stat-desc mt-1 text-base-content/50">Earnings collected</div>
-        </div>
-        <div class="stat card card-border bg-base-100 shadow-sm">
-            <div class="stat-title text-sm font-medium text-error">Outstanding Fees</div>
-            <div class="stat-value text-2xl mt-1 text-error">${ stats.outstanding|stringformat:".2f" }</div>
-            <div class="stat-desc mt-1 text-base-content/50">Awaiting processing</div>
-        </div>
-        <div class="stat card card-border bg-base-100 shadow-sm">
-            <div class="stat-title text-sm font-medium text-warning">Reimbursements Due</div>
-            <div class="stat-value text-2xl mt-1 text-warning">${ stats.reimb_outstanding|stringformat:".2f" }
-            </div>
-            <div class="stat-desc mt-1 text-base-content/50">Out of pocket tracking</div>
+            <div class="stat-title text-sm font-medium text-info">Active Events</div>
+            <div class="stat-value text-2xl mt-1 text-info">{{ stats.upcoming_count }}</div>
+            <div class="stat-desc mt-1 text-base-content/50">In progress or upcoming</div>
         </div>
     </div>
 

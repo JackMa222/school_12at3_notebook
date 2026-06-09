@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.html import escape
+from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DeleteView
@@ -267,9 +268,12 @@ class EventListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_events = self.get_queryset()
-               
+            
+        upcoming_count = user_events.filter(ending_date__gte=timezone.now().date()).count()
+        
         context['stats'] = {
-            'total_count': user_events.count()
+            'total_count': user_events.count(),
+            'upcoming_count': upcoming_count
         }
         rows = []
         
