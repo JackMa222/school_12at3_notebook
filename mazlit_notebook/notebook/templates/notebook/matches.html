@@ -1,0 +1,43 @@
+{% extends "notebook/layout.html" %}
+
+{% block title %}Matches{% endblock %}
+
+{% block navtitle %}Matches{% endblock %}
+
+{% block content %}
+<div class="px-4 py-8 max-w-7xl mx-auto space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <div class="stat card card-border bg-base-100 shadow-sm">
+            <div class="stat-title text-sm font-medium">Total Matches</div>
+            <div class="stat-value text-2xl mt-1 text-base-content">{{ stats.total_count }}</div>
+            <div class="stat-desc mt-1 text-base-content/50">Recorded Matches</div>
+        </div>
+        <div class="stat card card-border bg-base-100 shadow-sm">
+            <div class="stat-title text-sm font-medium text-info">Upcoming matches</div>
+            <div class="stat-value text-2xl mt-1 text-info">{{ stats.upcoming_count }}</div>
+            <div class="stat-desc mt-1 text-base-content/50">Upcoming</div>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between pt-2">
+        <div>
+            <h1 class="text-xl font-bold tracking-tight">Matches</h1>
+            <p class="text-xs text-base-content/60">Click on any entry description title link to edit details or delete
+                records.</p>
+        </div>
+        <a href="{% url 'notebook:match_create' %}" class="btn btn-primary gap-2 items-center">
+            Record New Match<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+        </a>
+    </div>
+    <div class="card card-border bg-base-100 shadow-lg w-full">
+        <div class="card-body p-0 md:p-6">
+            <c-table :headers="table_headers" :rows="table_rows"
+                empty_message="No events recorded. Click 'Record New Match' to create one." />
+        </div>
+    </div>
+</div>
+{% endblock %}

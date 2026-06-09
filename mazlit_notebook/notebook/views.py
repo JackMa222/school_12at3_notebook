@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.html import escape
-from django.utils import timezone
+from django.utils import timezone, formats
+from django.template import Template, Context
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DeleteView
@@ -353,3 +354,59 @@ class MatchDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     
     def get_success_message(self, cleaned_data):
         return f"Match '{self.object.title}' was successfully deleted."
+
+class MatchListView(LoginRequiredMixin, ListView):
+    model = Match
+    template_name = 'notebook/matches.html'
+    context_object_name = 'matches'
+    
+    def get_queryset(self):
+        return Match.objects.filter(user=self.request.user)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_matches = self.get_queryset()
+            
+        upcoming_count = user_matches.filter(date_time__gte=timezone.now().date()).count()
+        
+        context['stats'] = {
+            'total_count': user_matches.count(),
+            'upcoming_count': upcoming_count
+        }
+        rows = []
+        
+        for match in user_matches:
+            detail_url = reverse("notebook:match_edit", kwargs={'pk': match.pk})
+            escaped_name = escape(match.title)
+            name_link = f'<a href="{detail_url}" class="link link-primary font-medium hover:underline">{escaped_name}</a>'
+            t = Template('{% load tz %}{{ dt|localtime|date:"SHORT_DATETIME_FORMAT" }}')
+            clean_date = t.render(Context({'dt': match.date_time}))
+            date_html = f'<span class="whitespace-nowrap">{clean_date}</span>'
+            escaped_venue = escape(match.venue)
+            escaped_grade = escape(match.grade)
+            escaped_fee = f"${escape(match.payment_fee)}"
+            escaped_competition = escape(match.competition)
+            
+            role_badges = []
+            for role in match.roles.all():
+                escaped_role_name = escape(role.name)
+                css_class = role.badge_class if role.badge_class else "badge-ghost"
+                
+                badge_html = f'<span class="badge {css_class} text-xs font-semibold mr-1">{escaped_role_name}</span>'
+                role_badges.append(badge_html)
+                
+            role_badges = "".join(role_badges) if role_badges else '-'
+            
+            rows.append([
+                name_link,
+                date_html,
+                escaped_venue,
+                escaped_grade,
+                escaped_fee,
+                role_badges,
+                escaped_competition
+            ])
+            
+        context['table_headers'] = ["Name", "Date / Time", "Venue", "Grade", "Fee", "Roles", "Competition"]
+        context['table_rows'] = rows
+        return context
