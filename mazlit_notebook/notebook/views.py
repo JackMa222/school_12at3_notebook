@@ -264,7 +264,9 @@ class EventListView(LoginRequiredMixin, ListView):
     context_object_name = 'events'
     
     def get_queryset(self):
-        return Event.objects.filter(user=self.request.user)
+        return (Event.objects.filter(user=self.request.user)
+                .select_related('organiser')
+                .prefetch_related('roles'))
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -361,7 +363,9 @@ class MatchListView(LoginRequiredMixin, ListView):
     context_object_name = 'matches'
     
     def get_queryset(self):
-        return Match.objects.filter(user=self.request.user)
+        return (Match.objects.filter(user=self.request.user)
+                .select_related('competiton')
+                .prefetch_related('roles'))
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
