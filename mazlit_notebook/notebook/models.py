@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 # Audit log
 from auditlog.registry import auditlog
 
@@ -74,6 +75,13 @@ class Event(models.Model):
         related_name='events'
     )
     
+    def clean(self):
+        if self.starting_date and self.ending_date:
+            if self.ending_date < self.starting_date:
+                raise ValidationError(
+                    "Ending date cannot be before starting date."
+                )
+    
     def __str__(self):
         return self.name
     
@@ -93,7 +101,7 @@ class Match(models.Model):
         related_name='matches',
         verbose_name="Role(s)"
     )
-    payment_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Base Match Fee")
+    payment_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Base Match Fee", validators=[MinValueValidator(0.00)])
     
     competition = models.ForeignKey(
         Event,
