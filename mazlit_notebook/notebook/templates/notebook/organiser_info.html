@@ -7,14 +7,6 @@
 
 {% block content %}
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 px-4 py-8 items-start">
-    <div class="card card-border bg-base-100 shadow-lg lg:col-span-2 w-full">
-        <div class="card-body">
-            <h2 class="card-title">Organisers</h2>
-            <c-table :headers="table_headers" :rows="table_rows"
-                empty_message="No organisers found. Add one using the form on the right." />
-        </div>
-    </div>
-
     <c-form :form="form" action="" class="w-full" cancel_url="{% url 'notebook:organisers' %}" title="Update Organiser Details" submit_text="Update" />
     <div class="card card-border border-error/30 bg-error/5 shadow-lg">
         <div class="card-body">
