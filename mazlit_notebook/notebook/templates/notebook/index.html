@@ -7,7 +7,7 @@
 {% block content %}
 <!--<div class="grow flex flex-col px-4 py-8">-->
 
-<div class="flex overflow-x-auto gap-6 pb-4 snap-mandatory scrollbar-hide snap-x">
+<div class="bg-base-200/40 p-4 flex overflow-x-auto gap-6 pb-4 snap-mandatory scrollbar-hide snap-x">
     <a href="{% url 'notebook:match_create' %}"
         class="snap-start shrink-0 w-[260px] md:w-[300px] border-2 border-dashed border-base-300 hover:border-primary bg-base-100 rounded-xl flex flex-col items-center justify-center p-6 transition group min-h-[190px]">
         <div class="text-4xl text-base-content/40 group-hover:text-primary transition mb-2">+</div>
@@ -67,8 +67,8 @@
 
     {% endfor %}
 </div>
-
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+<div class="px-2 md:px-4 py-4 space-y-6">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div
         class="bg-base-100 rounded-xl shadow-sm border border-base-200 lg:col-span-2 overflow-hidden flex flex-col justify-between">
         <div>
@@ -226,5 +226,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

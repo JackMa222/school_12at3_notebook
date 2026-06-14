@@ -28,7 +28,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
         context['events'] = (Event.objects.filter(user=user, ending_date__gte=timezone.now().date())
                              .order_by('starting_date')[:3])
         
-        context['latest_payments'] = (Payment.objects.filter(user=user, payment_status='PAID')[:2])
+        context['latest_payments'] = (Payment.objects.filter(user=user, payment_status='PAID')[:3])
         
         outstanding = (Payment.objects.filter(user=user, payment_status='OUTSTANDING')
                        .aggregate(total=Sum('amount'))['total'])
