@@ -5,7 +5,60 @@
 {% block navtitle %}Home{% endblock %}
 
 {% block content %}
-<div class="grow flex flex-col px-4 py-8">
+<!--<div class="grow flex flex-col px-4 py-8">-->
 
-</div>
+    <div class="flex overflow-x-auto gap-6 pb-4 snap-mandatory scrollbar-hide snap-x">
+        <a href="{% url 'notebook:match_create' %}" class="snap-start shrink-0 w-[260px] md:w-[300px] border-2 border-dashed border-base-300 hover:border-primary bg-base-100 rounded-xl flex flex-col items-center justify-center p-6 transition group min-h-[190px]">
+            <div class="text-4xl text-base-content/40 group-hover:text-primary transition mb-2">+</div>
+            <span class="font-semibold text-base-content/70 group-hover:text-primary transition text-center">Add new game</span>
+        </a>
+
+        {% for game in matches %}
+        <div class="snap-start shrink-0 w-[300px] md:w-[360px] bg-base-100 rounded-xl p-5 shadow-sm border border-base-200 flex flex-col justify-between min-h-[190px]">
+            <div>
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-bold text-lg truncate maw-w-[180px]">{{ game.grade }} @ {{ game.venue }}</h3>
+
+                    <div class="flex gap-1 flex-wrap">
+                        {% for role in game.roles.all %}
+                        <span class="badge {% if role.badge_class %}{{ role.badge_class }}{% else %}badge-ghost{% endif %} shrink-0 whitespace-nowrap text-xs font-semibold">{{ role.name }}</span>
+                        {% empty %}
+                        <span class="badge badge-ghost text-xs">No Role</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% now "Y-m-d H:i" as current_time %}
+                <p class="text-sm font-semibold text-base-content/60 flex items-center gap-1">
+                    {{ game.date_time|date:"D d/m/y, g:iA" }}
+
+                    {% if game.date_time|date:"Y-m-d H:i" > current_time %}
+                    <span class="badge badge-sm badge-neutral text-white font-bold">Upcoming</span>
+                    {% else %}
+                    <span class="badge badge-sm badge-success font-bold text-white">Complete</span>
+                    {% endif %}
+                </p>
+
+                <div class="mt-3 text-sm font-medium text-base-content/40">
+                    <p>{{ game.title }}</p>
+                    <p>{{ game.competition.name }}</p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                {% if game.status == 'PENDING' %}
+                <a href="{% url 'notebook:match_edit' game.pk %}" class="btn btn-primary btn-sm w-full text-white normal-case">Manage</a>
+                {% else %}
+                <a href="{% url 'notebook:match_edit' game.pk %}" class="btn btn-outline btn-sm w-full normal-case">Manage</a>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="shrink-0 w-[260px] md:w-[300px] bg-base-300 rounded-xl p-5 flex flex-col justify-center items-center text-center min-h-[190px]">
+            <p class="text-sm font-semibold text-base-content/50">No matches found in database for this account.</p>
+        </div>
+
+        {% endfor %}
+    </div>
+
 {% endblock %}

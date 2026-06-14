@@ -15,6 +15,17 @@ from .models import Organiser, PaymentBody, Payment, Event, Match
 # Create your views here.
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = 'notebook/index.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        
+        context['matches'] = (Match.objects.filter(user=user)
+                              .select_related('competition')
+                              .prefetch_related('roles')
+                              .order_by('-date_time'))
+        
+        return context
 
 class OrganiserCreateListView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Organiser
@@ -364,7 +375,7 @@ class MatchListView(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         return (Match.objects.filter(user=self.request.user)
-                .select_related('competiton')
+                .select_related('competition')
                 .prefetch_related('roles'))
     
     def get_context_data(self, **kwargs):
