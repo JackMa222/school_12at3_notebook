@@ -25,6 +25,16 @@ class IndexView(LoginRequiredMixin, TemplateView):
                               .prefetch_related('roles')
                               .order_by('-date_time'))
         
+        context['events'] = (Event.objects.filter(user=user, ending_date__gte=timezone.now().date())
+                             .order_by('starting_date')[:3])
+        
+        context['latest_payments'] = (Payment.objects.filter(user=user, payment_status='PAID')[:2])
+        
+        outstanding = (Payment.objects.filter(user=user, payment_status='OUTSTANDING')
+                       .aggregate(total=Sum('amount'))['total'])
+        
+        context['outstanding_balance'] = outstanding or 0.00
+        
         return context
 
 class OrganiserCreateListView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
