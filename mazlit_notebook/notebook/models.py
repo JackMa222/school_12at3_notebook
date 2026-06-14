@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
+# Audit log
+from auditlog.registry import auditlog
 
 
 # Create your models here.
@@ -222,3 +224,7 @@ class Payment(models.Model):
         
         return f"${self.amount} ({self.payment_status}) - {linked_to}"
     
+auditlog.register(Match)
+auditlog.register(Payment)
+auditlog.register(Event)
+auditlog.register(Organiser)

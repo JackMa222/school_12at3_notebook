@@ -1,4 +1,2 @@
-Next to work on: 9/6 6pm
-- Create main index home page
+Next to work on: 14/6 2pm
 - Show relationships on page
-- Add django-auditlog
