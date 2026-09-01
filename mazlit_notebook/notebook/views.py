@@ -23,12 +23,14 @@ class IndexView(LoginRequiredMixin, TemplateView):
         context['matches'] = (Match.objects.filter(user=user)
                               .select_related('competition')
                               .prefetch_related('roles')
-                              .order_by('-date_time'))
+                              .order_by('-date_time')[:10])
         
         context['events'] = (Event.objects.filter(user=user, ending_date__gte=timezone.now().date())
                              .order_by('starting_date')[:3])
         
-        context['latest_payments'] = (Payment.objects.filter(user=user, payment_status='PAID')[:3])
+        context['latest_payments'] = (Payment.objects.filter(user=user, payment_status__in=['PAID', 'PAID_REIMB'])[:3])
+        
+        context['outstanding_payments'] = (Payment.objects.filter(user=user, payment_status__in=['OUTSTANDING', 'OUTSTANDING_REIMB'])[:3])
         
         outstanding = (Payment.objects.filter(user=user, payment_status='OUTSTANDING')
                        .aggregate(total=Sum('amount'))['total'])

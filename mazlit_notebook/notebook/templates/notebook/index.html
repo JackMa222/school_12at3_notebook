@@ -201,9 +201,7 @@
                 </a>
             </div>
         </div>
-    </div>
-
-    <div class="bg-base-100 rounded-xl p-4 shadow-sm border border-base-200 lg:col-span-3">
+        <div class="bg-base-100 rounded-xl p-4 shadow-sm border border-base-200 lg:col-span-3">
         <h2 class="font-bold text-xs text-base-content/40 uppercase tracking-wider mb-2">Financials</h2>
         <div class="mb-4">
             <div class="text-3xl font-black text-base-content">
@@ -221,10 +219,25 @@
                         <p class="text-base-content/40 text-[10px]">${{ payment.amount }}</p>
                     </div></div>
                     {% empty %}
-                    <p class="text-center text-xs text-base-content/40 py-2">No recent payemnts recorded.</p>
+                    <p class="text-center text-xs text-base-content/40 py-2">No recent payments recorded.</p>
                     {% endfor %}
             </div>
         </div>
+        <div class="border-t border-base-200 pt-3">
+            <div class="text-xs font-bold text-base-content/40 uppercase tracking-wider mb-2">Latest Outstanding payments</div>
+            <div class="space-y-2">
+                {% for payment in outstanding_payments %}
+                <div class="flex justify-between items-center text-xs hover:bg-base-200/40 p-1 rounded transition">
+                    <div>
+                        <p class="font-bold text-base-content">{{ payment.name }} ({{ payment.payment_body.name }})</p>
+                        <p class="text-base-content/40 text-[10px]">${{ payment.amount }}</p>
+                    </div></div>
+                    {% empty %}
+                    <p class="text-center text-xs text-base-content/40 py-2">No recent payments recorded.</p>
+                    {% endfor %}
+            </div>
+        </div>
+    </div>
     </div>
 </div>
 </div>
